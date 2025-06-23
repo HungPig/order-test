@@ -1,0 +1,44 @@
+.header {
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.header-content h1 {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #111827;
+  margin: 0 0 8px 0;
+}
+
+.breadcrumb {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.breadcrumb .current {
+  color: #111827;
+}
+
+.add-button {
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.search-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  gap: 16px;
+}
+
+.search-container {
+  position: relative;
+  flex: 1;
+  max-width: 400px;
+}
