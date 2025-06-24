@@ -1,10 +1,12 @@
-import { Button, Input, Modal } from "antd";
+import { Button, Input } from "antd";
 import { Space, Table } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
-import "../styles/category.css";
+import "../../styles/category.css";
 import { Typography } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { useEffect, useState } from "react";
+import Createcategory from "./Createcategory";
+import UpdateCategory from "./UpdateCategory";
 const { Title } = Typography;
 interface ICategory {
   id: number;
@@ -12,44 +14,20 @@ interface ICategory {
 }
 const CategoryPage = () => {
   const [listCate, setListCate] = useState([]);
-  const [name, setname] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isCreateModalOpen, setisCreateModalOpen] = useState(false);
+  const [isUpdateModalOpen, setisUpdateModalOpen] = useState(false);
   const showModal = () => {
-    setname("");
-    setIsModalOpen(true);
+    setisCreateModalOpen(true);
   };
   useEffect(() => {
     console.log("check effect: ");
     getData();
   }, []);
   const getData = async () => {
-    const res = await fetch("http://localhost:8080/api/category", {
+    const res = await fetch("https://ordercoffeebe.onrender.com/api/category", {
     });
     const data = await res.json();
     setListCate(data.data);
-  };
-  const handleOk =  async () => {
-    const data = {
-      name
-    };
-    const res = await fetch("http://localhost:8080/api/category", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ ...data }),
-    });
-    const d = await res.json();
-    if(d.data) {
-      getData();
-    } else {
-      //
-    }
-    setIsModalOpen(false);
-  };
-
-  const handleCancel = () => {
-    setIsModalOpen(false);
   };
   const columns: ColumnsType<ICategory> = [
     {
@@ -68,14 +46,19 @@ const CategoryPage = () => {
     {
       title: "Action",
       key: "action",
-      render: (_, record) => (
-        <Space size="middle">
-          <>
-            <a>Edit</a>
-            <a>Delete</a>
-          </>
-        </Space>
-      ),
+      render: (value, record) => {
+        return (
+          <Space size="middle">
+            <>
+              <a>Edit</a>
+              <a onClick={() => {
+                console.log("check button", record);
+                setisUpdateModalOpen(true);
+              }}>Delete</a>
+            </>
+          </Space>
+        );
+      }
     },
   ];
   return (
@@ -103,21 +86,16 @@ const CategoryPage = () => {
         </div>
       </div>
       <Table columns={columns} dataSource={listCate} rowKey={"id"} />
-      <Modal
-        title="Create Category"
-        closable={{ "aria-label": "Custom Close Button" }}
-        open={isModalOpen}
-        onOk={handleOk}
-        onCancel={handleCancel}
-      >
-        <div>
-          <Input
-            placeholder="Input Name Category"
-            value={name}
-            onChange={(event) => setname(event.target.value)}
-          />
-        </div>
-      </Modal>
+      <Createcategory
+        getData={getData}
+        isCreateModalOpen={isCreateModalOpen}
+        setisCreateModalOpen={setisCreateModalOpen}
+      />
+      <UpdateCategory
+        getData={getData}
+        isCreateModalOpen={isUpdateModalOpen}
+        setisCreateModalOpen={setisUpdateModalOpen}
+      />
     </>
   );
 };
