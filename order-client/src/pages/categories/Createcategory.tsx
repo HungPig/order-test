@@ -1,4 +1,4 @@
-import { Input, Modal } from "antd";
+import { Input, Modal, notification } from "antd";
 import { useState } from "react";
 interface IProps {
     getData: any;
@@ -22,8 +22,13 @@ const Createcategory = (props: IProps) => {
         const d = await res.json();
         if (d.data) {
             getData();
+            notification.success({
+                message: JSON.stringify(d.message)
+            })
         } else {
-            //
+            notification.success({
+                message: JSON.stringify(d.message)
+            })
         }
         setisCreateModalOpen(false);
     };

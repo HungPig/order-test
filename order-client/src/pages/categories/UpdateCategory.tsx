@@ -1,13 +1,31 @@
-import { Input, Modal } from "antd";
-import { useState } from "react";
+import { Input, Modal, notification } from "antd";
+import { useState , useEffect } from "react";
+export interface ICategory {
+    name: string
+}
 interface IProps {
     getData: any;
-    isCreateModalOpen: boolean;
-    setisCreateModalOpen: (v: boolean) => void;
+    isUpdateModalOpen: boolean;
+    setisUpdateModalOpen: (v: boolean) => void;
+    dataUpdate: null | ICategory;
+    setDataUpdate: any;
 }
 const UpdateCategory = (props: IProps) => {
     const [name, setname] = useState("");
-    const { getData, isCreateModalOpen, setisCreateModalOpen } = props;
+    const { 
+        getData, 
+        isUpdateModalOpen, 
+        setisUpdateModalOpen , 
+        dataUpdate,
+        setDataUpdate
+
+    } = props;
+    useEffect(() => {
+        if(dataUpdate) {
+            setname(dataUpdate.name);
+        }
+    }, [dataUpdate])
+    console.log("check data: ", dataUpdate);
     const handleOk = async () => {
         const data = {
             name
@@ -22,21 +40,25 @@ const UpdateCategory = (props: IProps) => {
         const d = await res.json();
         if (d.data) {
             getData();
+            notification.success({
+                message: JSON.stringify(d.message)
+            });
         } else {
             //
         }
-        setisCreateModalOpen(false);
+        setisUpdateModalOpen(false);
     };
 
     const handleCancel = () => {
         setname("");
-        setisCreateModalOpen(false);
+        setisUpdateModalOpen(false);
+        setDataUpdate(null);
     };
     return (
         <Modal
             title="Update Category"
             closable={{ "aria-label": "Custom Close Button" }}
-            open={isCreateModalOpen}
+            open={isUpdateModalOpen}
             onOk={handleOk}
             onCancel={handleCancel}
         >

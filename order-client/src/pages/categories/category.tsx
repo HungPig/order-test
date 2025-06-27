@@ -1,4 +1,4 @@
-import { Button, Input } from "antd";
+import { Button, Input, notification } from "antd";
 import { Space, Table } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import "../../styles/category.css";
@@ -16,27 +16,29 @@ const CategoryPage = () => {
   const [listCate, setListCate] = useState([]);
   const [isCreateModalOpen, setisCreateModalOpen] = useState(false);
   const [isUpdateModalOpen, setisUpdateModalOpen] = useState(false);
+  const [dataUpdate , setDataUpdate] = useState<null | ICategory>(null);
   const showModal = () => {
     setisCreateModalOpen(true);
   };
   useEffect(() => {
-    console.log("check effect: ");
     getData();
   }, []);
   const getData = async () => {
     const res = await fetch("https://ordercoffeebe.onrender.com/api/category", {
     });
-    const data = await res.json();
-    setListCate(data.data);
+    const d = await res.json();
+    if(!d.data)
+    {
+      notification.error({
+        message: JSON.stringify(d.message)
+      })
+    }
+    setListCate(d.data);
   };
   const columns: ColumnsType<ICategory> = [
     {
       title: "Id",
       dataIndex: "id",
-      render: (value, record) => {
-        console.log();
-        return <a>{record.id}</a>;
-      },
     },
     {
       title: "Name",
@@ -50,11 +52,12 @@ const CategoryPage = () => {
         return (
           <Space size="middle">
             <>
-              <a>Edit</a>
               <a onClick={() => {
                 console.log("check button", record);
+                setDataUpdate(record);
                 setisUpdateModalOpen(true);
-              }}>Delete</a>
+              }}>Edit</a>
+              <a>Delete</a>
             </>
           </Space>
         );
@@ -93,8 +96,10 @@ const CategoryPage = () => {
       />
       <UpdateCategory
         getData={getData}
-        isCreateModalOpen={isUpdateModalOpen}
-        setisCreateModalOpen={setisUpdateModalOpen}
+        isUpdateModalOpen={isUpdateModalOpen}
+        setisUpdateModalOpen={setisUpdateModalOpen}
+        dataUpdate = {dataUpdate}
+        setDataUpdate = {setDataUpdate}
       />
     </>
   );
