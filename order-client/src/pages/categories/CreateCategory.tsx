@@ -1,4 +1,4 @@
-import { Input, Modal, notification, Button, Checkbox, Form } from "antd";
+import { Input, Modal, notification,Form } from "antd";
 import { useState } from "react";
 interface IProps {
   getData: any;
@@ -9,10 +9,10 @@ const CreateCategory = (props: IProps) => {
   const [name, setname] = useState("");
   const { getData, isCreateModalOpen, setisCreateModalOpen } = props;
   const [form] = Form.useForm();
-  const onFinish = async (value: any) => {
+  const onFinish = async (values: any) => {
     const {
       name,
-    } = value;
+    } = values;
     const data = {name};
     const res = await fetch("https://ordercoffeebe.onrender.com/api/category", {
       method: "POST",
@@ -39,13 +39,10 @@ const CreateCategory = (props: IProps) => {
     setname("");
     setisCreateModalOpen(false);
   };
-  const onFinishFailed = (errorInfor: any) => {
-    console.log("success", errorInfor);
-  };
   return (
     <Modal
       title="Create Category"
-      closable={{ "aria-label": "Custom Close Button" }}
+      closable={true}
       open={isCreateModalOpen}
       onOk={() => {
         form.submit();
@@ -56,7 +53,6 @@ const CreateCategory = (props: IProps) => {
         name="basic"
         initialValues={{ remember: true }}
         onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
         autoComplete="off"
         form={form}
       >
